@@ -63,13 +63,8 @@
         <input type="text" id="filterInput" class="form-control filter-input" placeholder="Filtrar por tipo de póliza...">
         
         <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th id="tipoPolizaHeader" onclick="ordenar('tipoPoliza')">Tipo de Póliza</th>
-                    <th id="precioHeader" onclick="ordenar('precio')">Precio</th>
-                    <th id="edadHeader" onclick="ordenar('edad')">Edad del Cliente</th>
-                    <th id="probabilidadHeader" class="sorted-desc" onclick="ordenar('probabilidad')">Probabilidad de Retención</th>
-                </tr>
+            <thead id="tabla-encabezados">
+                <!-- Encabezados se generarán dinámicamente -->
             </thead>
             <tbody id="tabla-clientes">
                 <!-- Filas de datos aquí -->
