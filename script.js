@@ -1,3 +1,7 @@
+// Guardar los datos de clientes en localStorage (opcional)
+localStorage.setItem('clientes', JSON.stringify(clientes));
+
+
 // Datos de ejemplo sin usar localStorage
 const clientes = [
     { tipoPoliza: 'A', precio: 100, edad: 30, probabilidad: 0.9 },
@@ -7,7 +11,6 @@ const clientes = [
     { tipoPoliza: 'B', precio: 300, edad: 35, probabilidad: 0.85 }
 ];
 
-// Función para mostrar datos en la tabla
 function mostrarDatos() {
     const tablaClientes = document.getElementById('tabla-clientes');
     tablaClientes.innerHTML = ''; // Limpiar la tabla
@@ -22,9 +25,13 @@ function mostrarDatos() {
             <td>${cliente.probabilidad}</td>
         `;
         
+        // Añadir un evento de clic para abrir una nueva página con detalles
+        fila.addEventListener('click', () => {
+            window.location.href = `detalle.html?cliente=${index}`;
+        });
+
         tablaClientes.appendChild(fila);
     });
 }
 
-// Llamar a la función para mostrar los datos
 mostrarDatos();
