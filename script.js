@@ -69,4 +69,3 @@ window.onload = () => {
     clientes.sort((a, b) => b.probabilidad - a.probabilidad); // Ordenar de mayor a menor
     cargarTabla(clientes); // Cargar la tabla
 };
-
