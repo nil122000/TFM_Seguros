@@ -49,9 +49,18 @@ function ordenar(propiedad) {
 // Función para dibujar el gráfico de probabilidad
 function dibujarGrafico() {
     const ctx = document.getElementById('graficoProbabilidad').getContext('2d');
+    
+    // Obtener los datos de probabilidad y los tipos de póliza
     const probabilidades = clientes.map(cliente => cliente.probabilidad);
     const tiposPoliza = clientes.map(cliente => cliente.tipoPoliza);
 
+    // Verifica que haya datos para mostrar en el gráfico
+    if (probabilidades.length === 0 || tiposPoliza.length === 0) {
+        console.error('No hay datos para mostrar en el gráfico.');
+        return; // Salir si no hay datos
+    }
+
+    // Crear el gráfico
     const graficoProbabilidad = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -65,6 +74,7 @@ function dibujarGrafico() {
             }]
         },
         options: {
+            responsive: true,
             scales: {
                 y: {
                     beginAtZero: true,
@@ -80,4 +90,5 @@ function dibujarGrafico() {
 
 // Mostrar los datos en la tabla al cargar la página
 mostrarDatos();
+
 
