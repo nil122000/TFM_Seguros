@@ -16,18 +16,31 @@
     </div>
 
     <script>
-        // Recuperar datos del cliente desde localStorage
-        const cliente = JSON.parse(localStorage.getItem('clienteSeleccionado'));
-        if (cliente) {
-            document.getElementById('detalles-cliente').innerHTML = `
-                <p><strong>Tipo de Póliza:</strong> ${cliente.tipoPoliza}</p>
-                <p><strong>Precio:</strong> ${cliente.precio}</p>
-                <p><strong>Edad:</strong> ${cliente.edad}</p>
-                <p><strong>Probabilidad de Retención:</strong> ${cliente.probabilidad}</p>
-            `;
-        } else {
-            document.getElementById('detalles-cliente').innerHTML = '<p>No hay detalles disponibles.</p>';
-        }
+<script>
+    // Obtener el ID del cliente desde la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const clienteId = urlParams.get('id'); // Obtén el ID desde los parámetros de la URL
+
+    // Recuperar datos del cliente desde localStorage (aunque no estás usando localStorage)
+    // Necesitarás una forma de almacenar los datos de los clientes en localStorage
+    // o cargar el cliente basado en el ID si estás utilizando un archivo CSV.
+    const cliente = JSON.parse(localStorage.getItem('clienteSeleccionado'));
+
+    // Si estás almacenando clientes en localStorage, necesitarías hacer esto:
+    // const cliente = clientes[clienteId]; // Esto asumiendo que tienes un array `clientes` global
+
+    if (clienteId) {
+        document.getElementById('detalles-cliente').innerHTML = `
+            <p><strong>Tipo de Póliza:</strong> ${cliente.tipoPoliza}</p>
+            <p><strong>Precio:</strong> ${cliente.precio}</p>
+            <p><strong>Edad:</strong> ${cliente.edad}</p>
+            <p><strong>Probabilidad de Retención:</strong> ${cliente.probabilidad}</p>
+        `;
+    } else {
+        document.getElementById('detalles-cliente').innerHTML = '<p>No hay detalles disponibles.</p>';
+    }
+</script>
+
     </script>
 </body>
 </html>
