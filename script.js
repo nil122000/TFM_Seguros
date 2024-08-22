@@ -96,3 +96,4 @@ function actualizarGrafico() {
 // Cargar datos al inicio
 cargarDatos();
 
+
