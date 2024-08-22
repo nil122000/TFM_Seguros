@@ -1,3 +1,6 @@
+// Guardar los datos de clientes en localStorage
+localStorage.setItem('clientes', JSON.stringify(clientes));
+
 // Datos de ejemplo
 const clientes = [
     { tipoPoliza: 'A', precio: 100, edad: 30, probabilidad: 0.9 },
