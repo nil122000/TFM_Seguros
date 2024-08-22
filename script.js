@@ -7,6 +7,7 @@ async function cargarDatosCSV(url) {
     return rows.map(row => {
         const columns = row.split(',');
         return {
+            id: index,
             tipoPoliza: columns[0],
             precio: parseFloat(columns[1]),
             edad: parseInt(columns[2]),
