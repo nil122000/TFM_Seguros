@@ -22,13 +22,28 @@ function mostrarDatos() {
             <td>${cliente.probabilidad}</td>
         `;
         
-        // Añadir un evento de clic
+        // Añadir un evento de clic para abrir un modal
         fila.addEventListener('click', () => {
-            alert(`Información del Cliente: ${JSON.stringify(cliente)}`);
+            mostrarModal(cliente);
         });
 
         tablaClientes.appendChild(fila);
     });
+}
+
+// Función para mostrar un modal
+function mostrarModal(cliente) {
+    alert(`Información del Cliente:\nTipo de Póliza: ${cliente.tipoPoliza}\nPrecio: ${cliente.precio}\nEdad: ${cliente.edad}\nProbabilidad: ${cliente.probabilidad}`);
+}
+
+// Función para ordenar la tabla
+function ordenar(propiedad) {
+    clientes.sort((a, b) => {
+        if (a[propiedad] < b[propiedad]) return -1;
+        if (a[propiedad] > b[propiedad]) return 1;
+        return 0;
+    });
+    mostrarDatos();
 }
 
 // Llamar a la función para mostrar los datos
