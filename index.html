@@ -45,9 +45,11 @@
         }
         .sorted-asc::after {
             content: ' ▲'; /* Flecha hacia arriba */
+            font-size: 0.8em; /* Tamaño de la flecha */
         }
         .sorted-desc::after {
             content: ' ▼'; /* Flecha hacia abajo */
+            font-size: 0.8em; /* Tamaño de la flecha */
         }
         .filter-input {
             margin-bottom: 20px; /* Espaciado inferior para el input de filtro */
@@ -64,7 +66,7 @@
         
         <table class="table table-striped">
             <thead id="tabla-encabezados">
-                <!-- Encabezados se generarán dinámicamente -->
+                <!-- Los encabezados se llenarán dinámicamente -->
             </thead>
             <tbody id="tabla-clientes">
                 <!-- Filas de datos aquí -->
@@ -79,3 +81,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
