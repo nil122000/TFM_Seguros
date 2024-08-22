@@ -4,16 +4,18 @@ async function cargarDatosCSV(url) {
     const data = await response.text();
     const rows = data.split('\n').slice(1); // Ignorar la primera fila (encabezados)
 
-    return rows.map(row => {
+    const clientes = rows.map((row, index) => {
         const columns = row.split(',');
         return {
-            id: index,
+            id: index,  // Asignar un ID único aquí
             tipoPoliza: columns[0],
             precio: parseFloat(columns[1]),
             edad: parseInt(columns[2]),
             probabilidad: parseFloat(columns[3]),
         };
     });
+
+    return clientes;
 }
 
 // Variable para almacenar el estado de ordenación
