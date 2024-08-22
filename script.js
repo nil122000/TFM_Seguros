@@ -39,9 +39,11 @@ function cargarTabla(data) {
             <td>${cliente.probabilidad}</td>
         `;
         fila.addEventListener('click', () => {
-            // Redirigir a la página de detalle pasando el ID del cliente
-            window.location.href = `detalle.html?id=${cliente.id}`; // Redirecciona a detalle.html con ID
+        // Almacenar el cliente en localStorage antes de redirigir
+        localStorage.setItem('clienteSeleccionado', JSON.stringify(cliente));
+        window.location.href = `detalle.html?id=${cliente.id}`; // Redirecciona a detalle.html con ID
         });
+
         tablaClientes.appendChild(fila);
     });
 }
