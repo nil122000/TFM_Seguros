@@ -35,8 +35,8 @@
         table tr {
             cursor: pointer; /* Cambia el cursor en las filas de la tabla */
         }
-        .table tr {
-            cursor: pointer !important; /* Añadir !important para asegurarse de que se aplique */
+        .table tr:nth-child(odd) {
+            background-color: #f8f9fa; /* Fondo claro para filas impares */
         }
         .sorted-asc::after {
             content: ' ▲'; /* Flecha hacia arriba */
