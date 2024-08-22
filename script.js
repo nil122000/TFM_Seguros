@@ -12,7 +12,7 @@ function mostrarDatos() {
     const tablaClientes = document.getElementById('tabla-clientes');
     tablaClientes.innerHTML = ''; // Limpiar la tabla
 
-    clientes.forEach(cliente => {
+    clientes.forEach((cliente, index) => {
         const fila = document.createElement('tr');
         
         fila.innerHTML = `
@@ -22,18 +22,13 @@ function mostrarDatos() {
             <td>${cliente.probabilidad}</td>
         `;
         
-        // Añadir un evento de clic para abrir un modal
+        // Añadir un evento de clic para abrir una nueva página con detalles
         fila.addEventListener('click', () => {
-            mostrarModal(cliente);
+            window.location.href = `detalle.html?cliente=${index}`;
         });
 
         tablaClientes.appendChild(fila);
     });
-}
-
-// Función para mostrar un modal
-function mostrarModal(cliente) {
-    alert(`Información del Cliente:\nTipo de Póliza: ${cliente.tipoPoliza}\nPrecio: ${cliente.precio}\nEdad: ${cliente.edad}\nProbabilidad: ${cliente.probabilidad}`);
 }
 
 // Función para ordenar la tabla
@@ -46,5 +41,35 @@ function ordenar(propiedad) {
     mostrarDatos();
 }
 
-// Llamar a la función para mostrar los datos
+// Función para mostrar el gráfico
+function mostrarGrafico() {
+    const ctx = document.getElementById('graficoProbabilidad').getContext('2d');
+    const probabilidadDatos = clientes.map(cliente => cliente.probabilidad);
+    const tiposPoliza = clientes.map(cliente => cliente.tipoPoliza);
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: tiposPoliza,
+            datasets: [{
+                label: 'Probabilidad de Retención',
+                data: probabilidadDatos,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+// Llamar a las funciones para mostrar los datos y el gráfico
 mostrarDatos();
+mostrarGrafico();
+
