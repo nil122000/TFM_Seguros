@@ -5,15 +5,20 @@ async function cargarDatosCSV(url) {
     const rows = data.split('\n').slice(1); // Ignorar la primera fila (encabezados)
 
     const clientes = rows.map((row, index) => {
-        const columns = row.split(',');
-        return {
-            id: index,  // Asignar un ID único aquí
-            tipoPoliza: columns[0],
-            precio: parseFloat(columns[1]),
-            edad: parseInt(columns[2]),
-            probabilidad: parseFloat(columns[3]),
-        };
-    });
+        const columns = row.split(',').map(column => column.trim()); // Eliminar espacios en blanco
+
+        // Verificar que la fila no esté vacía y tenga el número adecuado de columnas
+        if (columns.length === 4 && columns.every(col => col)) {
+            return {
+                id: index,  // Asignar un ID único aquí
+                tipoPoliza: columns[0],
+                precio: parseFloat(columns[1]),
+                edad: parseInt(columns[2]),
+                probabilidad: parseFloat(columns[3]),
+            };
+        }
+        return null; // Retornar null para filas inválidas
+    }).filter(cliente => cliente !== null); // Filtrar las filas inválidas
 
     return clientes;
 }
