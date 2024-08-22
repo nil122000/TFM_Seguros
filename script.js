@@ -59,7 +59,9 @@ function resaltarColumnaOrdenada(columna, direccion) {
 
 function mostrarDetalles(index) {
     const cliente = datosClientes[index];
-    alert(`Detalles del Cliente:\nTipo de Póliza: ${cliente.tipoPoliza}\nPrecio: ${cliente.precio}\nEdad: ${cliente.edad}\nProbabilidad de Retención: ${cliente.probabilidad}`);
+    // Redirigir a detalle.html con los datos del cliente
+    localStorage.setItem('clienteSeleccionado', JSON.stringify(cliente));
+    window.location.href = 'detalle.html'; // Asegúrate de que este archivo existe
 }
 
 function actualizarGrafico() {
@@ -95,5 +97,3 @@ function actualizarGrafico() {
 
 // Cargar datos al inicio
 cargarDatos();
-
-
