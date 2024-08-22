@@ -29,14 +29,17 @@
         table th:hover {
             background-color: inherit; /* Evita que el encabezado cambie de color al pasar el mouse */
         }
-        table tr:hover {
-            background-color: #d1ecf1; /* Cambiar el fondo al pasar el mouse (color claro) */
-        }
         table tr {
             cursor: pointer; /* Cambia el cursor en las filas de la tabla */
         }
-        .table tr:nth-child(odd) {
+        table tr:nth-child(odd) {
             background-color: #f8f9fa; /* Fondo claro para filas impares */
+        }
+        table tr:nth-child(even) {
+            background-color: #e9ecef; /* Fondo gris para filas pares */
+        }
+        table tr:hover {
+            background-color: #d1ecf1; /* Cambia a azul claro al pasar el ratón */
         }
         .sorted-asc::after {
             content: ' ▲'; /* Flecha hacia arriba */
