@@ -71,6 +71,14 @@ function ordenar(propiedad) {
         return 0;
     });
 
+    // Marcar el encabezado correspondiente
+    const thead = document.getElementById('tabla-encabezados');
+    thead.querySelectorAll('th').forEach(th => {
+        th.classList.remove('sorted-asc', 'sorted-desc'); // Limpiar las clases de ordenación
+    });
+    const header = Array.from(thead.children).find(th => th.innerText === propiedad);
+    header.classList.add(ordenAscendente ? 'sorted-asc' : 'sorted-desc');
+
     cargarTabla(clientes, encabezados); // Recargar la tabla
 }
 
