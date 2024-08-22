@@ -1,94 +1,98 @@
-// Datos de ejemplo para la tabla de clientes
-const clientes = [
-    { tipoPoliza: 'A', precio: 100, edad: 30, probabilidad: 0.9 },
-    { tipoPoliza: 'B', precio: 200, edad: 45, probabilidad: 0.8 },
-    { tipoPoliza: 'C', precio: 150, edad: 25, probabilidad: 0.95 },
-    { tipoPoliza: 'A', precio: 250, edad: 50, probabilidad: 0.7 },
-    { tipoPoliza: 'B', precio: 300, edad: 35, probabilidad: 0.85 }
+let datosClientes = [
+    { tipoPoliza: 'Auto', precio: 1200, edad: 30, probabilidad: 0.9 },
+    { tipoPoliza: 'Hogar', precio: 800, edad: 45, probabilidad: 0.8 },
+    { tipoPoliza: 'Vida', precio: 500, edad: 25, probabilidad: 0.95 },
+    { tipoPoliza: 'Salud', precio: 1500, edad: 35, probabilidad: 0.85 },
+    // Otras filas de datos...
 ];
 
-// Guardar los datos en localStorage
-localStorage.setItem('clientes', JSON.stringify(clientes));
+let ordenActual = { columna: '', direccion: '' }; // Variable para almacenar la columna y dirección de ordenación
 
-function mostrarDatos() {
-    const tablaClientes = document.getElementById('tabla-clientes');
-    tablaClientes.innerHTML = ''; // Limpiar la tabla
-
-    clientes.forEach((cliente, index) => {
-        const fila = document.createElement('tr');
-
-        fila.innerHTML = `
-            <td>${cliente.tipoPoliza}</td>
-            <td>${cliente.precio}</td>
-            <td>${cliente.edad}</td>
-            <td>${cliente.probabilidad}</td>
+function cargarDatos() {
+    const tabla = document.getElementById('tabla-clientes');
+    tabla.innerHTML = '';
+    datosClientes.forEach((cliente, index) => {
+        tabla.innerHTML += `
+            <tr onclick="mostrarDetalles(${index})">
+                <td>${cliente.tipoPoliza}</td>
+                <td>${cliente.precio}</td>
+                <td>${cliente.edad}</td>
+                <td>${cliente.probabilidad}</td>
+            </tr>
         `;
-
-        // Añadir un evento de clic para abrir una nueva página con detalles
-        fila.addEventListener('click', () => {
-            window.location.href = `detalle.html?cliente=${index}`;
-        });
-
-        tablaClientes.appendChild(fila);
     });
 
-    // Llamar a la función para dibujar el gráfico
-    dibujarGrafico();
+    // Actualiza el gráfico después de cargar los datos
+    actualizarGrafico();
 }
 
-// Función para ordenar la tabla
-function ordenar(propiedad) {
-    clientes.sort((a, b) => {
-        if (a[propiedad] < b[propiedad]) return -1;
-        if (a[propiedad] > b[propiedad]) return 1;
-        return 0;
-    });
-    mostrarDatos(); // Volver a mostrar los datos ordenados
-}
-
-// Función para dibujar el gráfico de probabilidad
-function dibujarGrafico() {
-    const ctx = document.getElementById('graficoProbabilidad').getContext('2d');
-    
-    // Obtener los datos de probabilidad y los tipos de póliza
-    const probabilidades = clientes.map(cliente => cliente.probabilidad);
-    const tiposPoliza = clientes.map(cliente => cliente.tipoPoliza);
-
-    // Verifica que haya datos para mostrar en el gráfico
-    if (probabilidades.length === 0 || tiposPoliza.length === 0) {
-        console.error('No hay datos para mostrar en el gráfico.');
-        return; // Salir si no hay datos
+function ordenar(columna) {
+    let direccion = 'asc';
+    if (ordenActual.columna === columna && ordenActual.direccion === 'asc') {
+        direccion = 'desc';
     }
 
-    // Crear el gráfico
-    const graficoProbabilidad = new Chart(ctx, {
-        type: 'bar',
+    datosClientes.sort((a, b) => {
+        if (a[columna] < b[columna]) return direccion === 'asc' ? -1 : 1;
+        if (a[columna] > b[columna]) return direccion === 'asc' ? 1 : -1;
+        return 0;
+    });
+
+    ordenActual = { columna, direccion };
+    cargarDatos();
+    resaltarColumnaOrdenada(columna, direccion);
+}
+
+function resaltarColumnaOrdenada(columna, direccion) {
+    const headers = ['tipoPolizaHeader', 'precioHeader', 'edadHeader', 'probabilidadHeader'];
+    headers.forEach(header => {
+        const th = document.getElementById(header);
+        th.classList.remove('sorted-asc', 'sorted-desc');
+    });
+
+    if (direccion === 'asc') {
+        document.getElementById(`${columna}Header`).classList.add('sorted-asc');
+    } else {
+        document.getElementById(`${columna}Header`).classList.add('sorted-desc');
+    }
+}
+
+function mostrarDetalles(index) {
+    const cliente = datosClientes[index];
+    alert(`Detalles del Cliente:\nTipo de Póliza: ${cliente.tipoPoliza}\nPrecio: ${cliente.precio}\nEdad: ${cliente.edad}\nProbabilidad de Retención: ${cliente.probabilidad}`);
+}
+
+function actualizarGrafico() {
+    const ctx = document.getElementById('graficoProbabilidad').getContext('2d');
+    const probabilidades = datosClientes.map(cliente => cliente.probabilidad);
+    const etiquetas = datosClientes.map(cliente => cliente.tipoPoliza);
+
+    if (window.miGrafico) {
+        window.miGrafico.destroy(); // Destruye el gráfico anterior si existe
+    }
+
+    window.miGrafico = new Chart(ctx, {
+        type: 'bar', // Tipo de gráfico
         data: {
-            labels: tiposPoliza,
+            labels: etiquetas,
             datasets: [{
                 label: 'Probabilidad de Retención',
                 data: probabilidades,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 1
             }]
         },
         options: {
-            responsive: true,
             scales: {
                 y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Probabilidad'
-                    }
+                    beginAtZero: true
                 }
             }
         }
     });
 }
 
-// Mostrar los datos en la tabla al cargar la página
-mostrarDatos();
-
+// Cargar datos al inicio
+cargarDatos();
 
