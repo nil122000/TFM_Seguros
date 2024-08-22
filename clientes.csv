@@ -1,8 +1,8 @@
-tipoPoliza,precio,edad,probabilidad
-Vida,100,30,0.9
-Salud,200,45,0.85
-Automóvil,150,50,0.7
-Hogar,120,35,0.75
-Vida,90,25,0.95
-Salud,180,60,0.8
-Nil,10,10,0.0
+tipoPoliza,precio,edad,probabilidad,fechaInicio
+Vida,100,30,0.9,2023-01-01
+Salud,200,45,0.85,2023-02-01
+Automóvil,150,50,0.7,2023-03-01
+Hogar,120,35,0.75,2023-04-01
+Vida,90,25,0.95,2023-05-01
+Salud,180,60,0.8,2023-06-01
+Nil,10,10,0.0,2023-07-01
