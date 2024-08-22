@@ -4,7 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <title>Tabla Interactiva</title>
+    <title>Tabla Interactiva de Clientes</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            flex: 1;
+        }
+        footer {
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            text-align: center;
+        }
+        table th {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <header class="bg-primary text-white text-center p-4">
@@ -27,11 +49,14 @@
         </table>
     </div>
 
-    <footer class="bg-light text-center p-4">
+    <canvas id="graficoProbabilidad" width="400" height="200"></canvas>
+
+    <footer>
         <p>&copy; 2024 Tu Empresa. Todos los derechos reservados.</p>
     </footer>
 
     <script src="script.js"></script>
 </body>
 </html>
+
 
