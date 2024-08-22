@@ -11,6 +11,10 @@ const clientes = [
 // Variable para almacenar el estado de ordenación
 let ordenAscendente = false; // Cambiado a false porque inicialmente es descendente
 
+clientes.forEach((cliente, index) => {
+    cliente.id = index; // Asignar un ID único basado en el índice
+});
+
 // Función para cargar la tabla
 function cargarTabla(data) {
     const tablaClientes = document.getElementById('tabla-clientes');
@@ -24,8 +28,8 @@ function cargarTabla(data) {
             <td>${cliente.probabilidad}</td>
         `;
         fila.addEventListener('click', () => {
-            // Redirigir a la página de detalle (aquí podrías implementar el redireccionamiento)
-            alert(`Detalles de: ${cliente.tipoPoliza}`);
+            // Redirigir a la página de detalle pasando el ID del cliente
+            window.location.href = `detalle.html?id=${cliente.id}`; // Redirecciona a detalle.html con ID
         });
         tablaClientes.appendChild(fila);
     });
@@ -71,3 +75,6 @@ window.onload = () => {
     // Establecer la clase de ordenación en la cabecera correspondiente
     document.getElementById('probabilidadHeader').classList.add('sorted-desc');
 };
+
+
+
