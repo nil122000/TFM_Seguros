@@ -1,8 +1,4 @@
-// Guardar los datos de clientes en localStorage (opcional)
-localStorage.setItem('clientes', JSON.stringify(clientes));
-
-
-// Datos de ejemplo sin usar localStorage
+// Datos de ejemplo para la tabla de clientes
 const clientes = [
     { tipoPoliza: 'A', precio: 100, edad: 30, probabilidad: 0.9 },
     { tipoPoliza: 'B', precio: 200, edad: 45, probabilidad: 0.8 },
@@ -11,20 +7,23 @@ const clientes = [
     { tipoPoliza: 'B', precio: 300, edad: 35, probabilidad: 0.85 }
 ];
 
+// Guardar los datos en localStorage
+localStorage.setItem('clientes', JSON.stringify(clientes));
+
 function mostrarDatos() {
     const tablaClientes = document.getElementById('tabla-clientes');
     tablaClientes.innerHTML = ''; // Limpiar la tabla
 
     clientes.forEach((cliente, index) => {
         const fila = document.createElement('tr');
-        
+
         fila.innerHTML = `
             <td>${cliente.tipoPoliza}</td>
             <td>${cliente.precio}</td>
             <td>${cliente.edad}</td>
             <td>${cliente.probabilidad}</td>
         `;
-        
+
         // Añadir un evento de clic para abrir una nueva página con detalles
         fila.addEventListener('click', () => {
             window.location.href = `detalle.html?cliente=${index}`;
@@ -32,6 +31,53 @@ function mostrarDatos() {
 
         tablaClientes.appendChild(fila);
     });
+
+    // Llamar a la función para dibujar el gráfico
+    dibujarGrafico();
 }
 
+// Función para ordenar la tabla
+function ordenar(propiedad) {
+    clientes.sort((a, b) => {
+        if (a[propiedad] < b[propiedad]) return -1;
+        if (a[propiedad] > b[propiedad]) return 1;
+        return 0;
+    });
+    mostrarDatos(); // Volver a mostrar los datos ordenados
+}
+
+// Función para dibujar el gráfico de probabilidad
+function dibujarGrafico() {
+    const ctx = document.getElementById('graficoProbabilidad').getContext('2d');
+    const probabilidades = clientes.map(cliente => cliente.probabilidad);
+    const tiposPoliza = clientes.map(cliente => cliente.tipoPoliza);
+
+    const graficoProbabilidad = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: tiposPoliza,
+            datasets: [{
+                label: 'Probabilidad de Retención',
+                data: probabilidades,
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Probabilidad'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Mostrar los datos en la tabla al cargar la página
 mostrarDatos();
+
