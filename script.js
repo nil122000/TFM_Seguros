@@ -1,20 +1,22 @@
-// Datos de ejemplo (esto debería ser reemplazado con los datos reales)
-const clientes = [
-    { tipoPoliza: 'Vida', precio: 100, edad: 30, probabilidad: 0.9 },
-    { tipoPoliza: 'Salud', precio: 200, edad: 45, probabilidad: 0.85 },
-    { tipoPoliza: 'Automóvil', precio: 150, edad: 50, probabilidad: 0.7 },
-    { tipoPoliza: 'Hogar', precio: 120, edad: 35, probabilidad: 0.75 },
-    { tipoPoliza: 'Vida', precio: 90, edad: 25, probabilidad: 0.95 },
-    { tipoPoliza: 'Salud', precio: 180, edad: 60, probabilidad: 0.8 },
-];
+// Función para cargar datos desde un archivo CSV
+async function cargarDatosCSV(url) {
+    const response = await fetch(url);
+    const data = await response.text();
+    const rows = data.split('\n').slice(1); // Ignorar la primera fila (encabezados)
+
+    return rows.map(row => {
+        const columns = row.split(',');
+        return {
+            tipoPoliza: columns[0],
+            precio: parseFloat(columns[1]),
+            edad: parseInt(columns[2]),
+            probabilidad: parseFloat(columns[3]),
+        };
+    });
+}
 
 // Variable para almacenar el estado de ordenación
 let ordenAscendente = false; // Cambiado a false porque inicialmente es descendente
-
-// Agregar un identificador único a cada cliente
-clientes.forEach((cliente, index) => {
-    cliente.id = index; // Asignar un ID único basado en el índice
-});
 
 // Función para cargar la tabla
 function cargarTabla(data) {
@@ -69,8 +71,9 @@ function filtrar() {
 // Agregar el evento de entrada para filtrar
 document.getElementById('filterInput').addEventListener('input', filtrar);
 
-// Ordenar por probabilidad de fuga más alta al cargar la página
-window.onload = () => {
+// Cargar la tabla al cargar la página
+window.onload = async () => {
+    const clientes = await cargarDatosCSV('clientes.csv'); // Ruta al archivo CSV
     clientes.sort((a, b) => b.probabilidad - a.probabilidad); // Ordenar de mayor a menor
     cargarTabla(clientes); // Cargar la tabla
     // Establecer la clase de ordenación en la cabecera correspondiente
