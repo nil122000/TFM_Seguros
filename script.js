@@ -1,99 +1,71 @@
-let datosClientes = [
-    { tipoPoliza: 'Auto', precio: 1200, edad: 30, probabilidad: 0.9 },
-    { tipoPoliza: 'Hogar', precio: 800, edad: 45, probabilidad: 0.8 },
-    { tipoPoliza: 'Vida', precio: 500, edad: 25, probabilidad: 0.95 },
-    { tipoPoliza: 'Salud', precio: 1500, edad: 35, probabilidad: 0.85 },
-    // Otras filas de datos...
+// Datos de ejemplo (esto debería ser reemplazado con los datos reales)
+const clientes = [
+    { tipoPoliza: 'Vida', precio: 100, edad: 30, probabilidad: 0.9 },
+    { tipoPoliza: 'Salud', precio: 200, edad: 45, probabilidad: 0.85 },
+    { tipoPoliza: 'Automóvil', precio: 150, edad: 50, probabilidad: 0.7 },
+    { tipoPoliza: 'Hogar', precio: 120, edad: 35, probabilidad: 0.75 },
+    { tipoPoliza: 'Vida', precio: 90, edad: 25, probabilidad: 0.95 },
+    { tipoPoliza: 'Salud', precio: 180, edad: 60, probabilidad: 0.8 },
 ];
 
-let ordenActual = { columna: '', direccion: '' }; // Variable para almacenar la columna y dirección de ordenación
+// Variable para almacenar el estado de ordenación
+let ordenAscendente = true;
 
-function cargarDatos() {
-    const tabla = document.getElementById('tabla-clientes');
-    tabla.innerHTML = '';
-    datosClientes.forEach((cliente, index) => {
-        tabla.innerHTML += `
-            <tr onclick="mostrarDetalles(${index})">
-                <td>${cliente.tipoPoliza}</td>
-                <td>${cliente.precio}</td>
-                <td>${cliente.edad}</td>
-                <td>${cliente.probabilidad}</td>
-            </tr>
+// Función para cargar la tabla
+function cargarTabla(data) {
+    const tablaClientes = document.getElementById('tabla-clientes');
+    tablaClientes.innerHTML = ''; // Limpiar tabla
+    data.forEach(cliente => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td>${cliente.tipoPoliza}</td>
+            <td>${cliente.precio}</td>
+            <td>${cliente.edad}</td>
+            <td>${cliente.probabilidad}</td>
         `;
+        fila.addEventListener('click', () => {
+            // Redirigir a la página de detalle (aquí podrías implementar el redireccionamiento)
+            alert(`Detalles de: ${cliente.tipoPoliza}`);
+        });
+        tablaClientes.appendChild(fila);
     });
-
-    // Actualiza el gráfico después de cargar los datos
-    actualizarGrafico();
 }
 
-function ordenar(columna) {
-    let direccion = 'asc';
-    if (ordenActual.columna === columna && ordenActual.direccion === 'asc') {
-        direccion = 'desc';
-    }
+// Función para ordenar
+function ordenar(propiedad) {
+    ordenAscendente = !ordenAscendente; // Cambiar el estado de ordenación
+    const direction = ordenAscendente ? 1 : -1; // 1 para ascendente, -1 para descendente
 
-    datosClientes.sort((a, b) => {
-        if (a[columna] < b[columna]) return direccion === 'asc' ? -1 : 1;
-        if (a[columna] > b[columna]) return direccion === 'asc' ? 1 : -1;
+    clientes.sort((a, b) => {
+        if (a[propiedad] < b[propiedad]) return -1 * direction;
+        if (a[propiedad] > b[propiedad]) return 1 * direction;
         return 0;
     });
 
-    ordenActual = { columna, direccion };
-    cargarDatos();
-    resaltarColumnaOrdenada(columna, direccion);
-}
-
-function resaltarColumnaOrdenada(columna, direccion) {
-    const headers = ['tipoPolizaHeader', 'precioHeader', 'edadHeader', 'probabilidadHeader'];
-    headers.forEach(header => {
-        const th = document.getElementById(header);
+    // Marcar el encabezado correspondiente
+    document.querySelectorAll('th').forEach(th => {
         th.classList.remove('sorted-asc', 'sorted-desc');
     });
+    const header = document.getElementById(`${propiedad}Header`);
+    header.classList.add(ordenAscendente ? 'sorted-asc' : 'sorted-desc');
 
-    if (direccion === 'asc') {
-        document.getElementById(`${columna}Header`).classList.add('sorted-asc');
-    } else {
-        document.getElementById(`${columna}Header`).classList.add('sorted-desc');
-    }
+    cargarTabla(clientes); // Recargar la tabla
 }
 
-function mostrarDetalles(index) {
-    const cliente = datosClientes[index];
-    // Redirigir a detalle.html con los datos del cliente
-    localStorage.setItem('clienteSeleccionado', JSON.stringify(cliente));
-    window.location.href = 'detalle.html'; // Asegúrate de que este archivo existe
+// Función para filtrar
+function filtrar() {
+    const input = document.getElementById('filterInput').value.toLowerCase();
+    const filtrados = clientes.filter(cliente => 
+        cliente.tipoPoliza.toLowerCase().includes(input)
+    );
+    cargarTabla(filtrados); // Cargar tabla con datos filtrados
 }
 
-function actualizarGrafico() {
-    const ctx = document.getElementById('graficoProbabilidad').getContext('2d');
-    const probabilidades = datosClientes.map(cliente => cliente.probabilidad);
-    const etiquetas = datosClientes.map(cliente => cliente.tipoPoliza);
+// Agregar el evento de entrada para filtrar
+document.getElementById('filterInput').addEventListener('input', filtrar);
 
-    if (window.miGrafico) {
-        window.miGrafico.destroy(); // Destruye el gráfico anterior si existe
-    }
-
-    window.miGrafico = new Chart(ctx, {
-        type: 'bar', // Tipo de gráfico
-        data: {
-            labels: etiquetas,
-            datasets: [{
-                label: 'Probabilidad de Retención',
-                data: probabilidades,
-                backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-}
-
-// Cargar datos al inicio
-cargarDatos();
+// Ordenar por probabilidad de fuga más alta al cargar la página
+window.onload = () => {
+    clientes.sort((a, b) => b.probabilidad - a.probabilidad); // Ordenar de mayor a menor
+    cargarTabla(clientes); // Cargar la tabla
+};
