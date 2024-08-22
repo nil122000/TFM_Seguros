@@ -1,6 +1,3 @@
-// Guardar los datos de clientes en localStorage
-localStorage.setItem('clientes', JSON.stringify(clientes));
-
 // Datos de ejemplo
 const clientes = [
     { tipoPoliza: 'A', precio: 100, edad: 30, probabilidad: 0.9 },
@@ -9,6 +6,9 @@ const clientes = [
     { tipoPoliza: 'A', precio: 250, edad: 50, probabilidad: 0.7 },
     { tipoPoliza: 'B', precio: 300, edad: 35, probabilidad: 0.85 }
 ];
+
+// Guardar los datos de clientes en localStorage para acceso en otras páginas
+localStorage.setItem('clientes', JSON.stringify(clientes));
 
 // Función para mostrar datos en la tabla
 function mostrarDatos() {
@@ -75,4 +75,3 @@ function mostrarGrafico() {
 // Llamar a las funciones para mostrar los datos y el gráfico
 mostrarDatos();
 mostrarGrafico();
-
