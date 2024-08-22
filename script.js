@@ -1,10 +1,13 @@
+// Variable global para almacenar clientes
+let clientes = [];
+
 // Función para cargar datos desde un archivo CSV
 async function cargarDatosCSV(url) {
     const response = await fetch(url);
     const data = await response.text();
     const rows = data.split('\n').slice(1); // Ignorar la primera fila (encabezados)
 
-    const clientes = rows.map((row, index) => {
+    const clientesData = rows.map((row, index) => {
         const columns = row.split(',').map(column => column.trim()); // Eliminar espacios en blanco
 
         // Verificar que la fila no esté vacía y tenga el número adecuado de columnas
@@ -20,7 +23,7 @@ async function cargarDatosCSV(url) {
         return null; // Retornar null para filas inválidas
     }).filter(cliente => cliente !== null); // Filtrar las filas inválidas
 
-    return clientes;
+    return clientesData;
 }
 
 // Variable para almacenar el estado de ordenación
@@ -39,9 +42,9 @@ function cargarTabla(data) {
             <td>${cliente.probabilidad}</td>
         `;
         fila.addEventListener('click', () => {
-        // Almacenar el cliente en localStorage antes de redirigir
-        localStorage.setItem('clienteSeleccionado', JSON.stringify(cliente));
-        window.location.href = `detalle.html?id=${cliente.id}`; // Redirecciona a detalle.html con ID
+            // Almacenar el cliente en localStorage antes de redirigir
+            localStorage.setItem('clienteSeleccionado', JSON.stringify(cliente));
+            window.location.href = `detalle.html?id=${cliente.id}`; // Redirecciona a detalle.html con ID
         });
 
         tablaClientes.appendChild(fila);
@@ -83,7 +86,7 @@ document.getElementById('filterInput').addEventListener('input', filtrar);
 
 // Cargar la tabla al cargar la página
 window.onload = async () => {
-    const clientes = await cargarDatosCSV('clientes.csv'); // Ruta al archivo CSV
+    clientes = await cargarDatosCSV('clientes.csv'); // Ruta al archivo CSV
     clientes.sort((a, b) => b.probabilidad - a.probabilidad); // Ordenar de mayor a menor
     cargarTabla(clientes); // Cargar la tabla
     // Establecer la clase de ordenación en la cabecera correspondiente
