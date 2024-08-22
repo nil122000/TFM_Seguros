@@ -11,6 +11,7 @@ const clientes = [
 // Variable para almacenar el estado de ordenación
 let ordenAscendente = false; // Cambiado a false porque inicialmente es descendente
 
+// Agregar un identificador único a cada cliente
 clientes.forEach((cliente, index) => {
     cliente.id = index; // Asignar un ID único basado en el índice
 });
@@ -75,6 +76,3 @@ window.onload = () => {
     // Establecer la clase de ordenación en la cabecera correspondiente
     document.getElementById('probabilidadHeader').classList.add('sorted-desc');
 };
-
-
-
