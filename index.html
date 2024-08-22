@@ -4,51 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>Tabla Interactiva de Clientes</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f7fa;
-        }
-        header {
-            background-color: #007bff;
-            color: white;
-            padding: 20px;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
         }
         .container {
-            margin-top: 30px;
-        }
-        table th {
-            cursor: pointer;
-            background-color: #007bff;
-            color: white;
-        }
-        table th:hover {
-            background-color: #0056b3;
-        }
-        .filter-input {
-            margin-bottom: 20px;
+            flex: 1;
         }
         footer {
-            background-color: #f8f9fa;
-            padding: 10px;
-            text-align: center;
             position: relative;
             bottom: 0;
             width: 100%;
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            text-align: center;
         }
-        .btn-primary {
-            transition: background-color 0.3s;
+        table th {
+            cursor: pointer; /* Cambia el cursor en las cabeceras */
+            background-color: #007bff; /* Fondo azul para los encabezados */
+            color: white; /* Texto en blanco para los encabezados */
         }
-        .btn-primary:hover {
-            background-color: #0056b3;
+        table th:hover {
+            background-color: #0056b3; /* Fondo azul oscuro al pasar el mouse sobre el encabezado */
+        }
+        table tr {
+            cursor: pointer; /* Cambia el cursor en las filas de la tabla */
+        }
+        table tr:nth-child(odd) {
+            background-color: #ffffff !important; /* Fondo blanco para filas impares */
+        }
+        table tr:nth-child(even) {
+            background-color: #e9ecef !important; /* Fondo gris para filas pares */
+        }
+        table tr:hover {
+            background-color: #d1ecf1 !important; /* Cambia a azul claro al pasar el ratón */
+        }
+        .sorted-asc::after {
+            content: ' ▲'; /* Flecha hacia arriba */
+        }
+        .sorted-desc::after {
+            content: ' ▼'; /* Flecha hacia abajo */
+        }
+        .filter-input {
+            margin-bottom: 20px; /* Espaciado inferior para el input de filtro */
         }
     </style>
 </head>
 <body>
-    <header>
+    <header class="bg-primary text-white text-center p-4">
         <h1>Clientes y Políticas</h1>
     </header>
     
@@ -58,11 +65,10 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th id="categoriaPolizaHeader" onclick="ordenar('tipoPoliza')">Categoría de Póliza</th>
+                    <th id="tipoPolizaHeader" onclick="ordenar('tipoPoliza')">Tipo de Póliza</th>
                     <th id="precioHeader" onclick="ordenar('precio')">Precio</th>
                     <th id="edadHeader" onclick="ordenar('edad')">Edad del Cliente</th>
                     <th id="probabilidadHeader" class="sorted-desc" onclick="ordenar('probabilidad')">Probabilidad de Retención</th>
-                    <th id="fechaInicioHeader" onclick="ordenar('fechaInicio')">Fecha de Inicio</th>
                 </tr>
             </thead>
             <tbody id="tabla-clientes">
