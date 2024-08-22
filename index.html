@@ -24,33 +24,19 @@
             text-align: center;
         }
         table th {
-            cursor: pointer; /* Cambia el cursor en las cabeceras */
-            background-color: #007bff; /* Fondo azul para los encabezados */
-            color: white; /* Texto en blanco para los encabezados */
-        }
-        table th:hover {
-            background-color: #0056b3; /* Fondo azul oscuro al pasar el mouse sobre el encabezado */
-        }
-        table tr {
-            cursor: pointer; /* Cambia el cursor en las filas de la tabla */
-        }
-        table tr:nth-child(odd) {
-            background-color: #ffffff !important; /* Fondo blanco para filas impares */
-        }
-        table tr:nth-child(even) {
-            background-color: #e9ecef !important; /* Fondo gris para filas pares */
-        }
-        table tr:hover {
-            background-color: #d1ecf1 !important; /* Cambia a azul claro al pasar el ratón */
+            cursor: pointer;
         }
         .sorted-asc::after {
-            content: ' ▲'; /* Flecha hacia arriba */
+            content: " ↑";
         }
         .sorted-desc::after {
-            content: ' ▼'; /* Flecha hacia abajo */
+            content: " ↓";
         }
-        .filter-input {
-            margin-bottom: 20px; /* Espaciado inferior para el input de filtro */
+        tr:hover {
+            background-color: #d1ecf1; /* Color para filas al pasar el ratón */
+        }
+        th {
+            background-color: #f8f9fa; /* Color de fondo para los encabezados */
         }
     </style>
 </head>
@@ -60,15 +46,14 @@
     </header>
     
     <div class="container mt-5">
-        <input type="text" id="filterInput" class="form-control filter-input" placeholder="Filtrar por tipo de póliza...">
-        
+        <input type="text" id="filterInput" placeholder="Filtrar por tipo de póliza" class="form-control mb-3">
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th id="tipoPolizaHeader" onclick="ordenar('tipoPoliza')">Tipo de Póliza</th>
                     <th id="precioHeader" onclick="ordenar('precio')">Precio</th>
                     <th id="edadHeader" onclick="ordenar('edad')">Edad del Cliente</th>
-                    <th id="probabilidadHeader" class="sorted-desc" onclick="ordenar('probabilidad')">Probabilidad de Retención</th>
+                    <th id="probabilidadHeader" onclick="ordenar('probabilidad')">Probabilidad de Retención</th>
                 </tr>
             </thead>
             <tbody id="tabla-clientes">
