@@ -24,7 +24,17 @@
             text-align: center;
         }
         table th {
-            cursor: pointer;
+            cursor: pointer; /* Cambia el cursor en las cabeceras */
+        }
+        table tr:hover {
+            background-color: #f1f1f1; /* Resaltar la fila al pasar el mouse */
+        }
+        table tr {
+            cursor: pointer; /* Cambia el cursor en las filas de la tabla */
+        }
+        /* Asegurarse de que no haya conflicto de estilo */
+        .table tr {
+            cursor: pointer !important; /* Añadir !important para asegurarse de que se aplique */
         }
     </style>
 </head>
@@ -59,4 +69,3 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
-
