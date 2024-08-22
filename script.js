@@ -9,7 +9,7 @@ const clientes = [
 ];
 
 // Variable para almacenar el estado de ordenación
-let ordenAscendente = true;
+let ordenAscendente = false; // Cambiado a false porque inicialmente es descendente
 
 // Función para cargar la tabla
 function cargarTabla(data) {
@@ -68,4 +68,6 @@ document.getElementById('filterInput').addEventListener('input', filtrar);
 window.onload = () => {
     clientes.sort((a, b) => b.probabilidad - a.probabilidad); // Ordenar de mayor a menor
     cargarTabla(clientes); // Cargar la tabla
+    // Establecer la clase de ordenación en la cabecera correspondiente
+    document.getElementById('probabilidadHeader').classList.add('sorted-desc');
 };
