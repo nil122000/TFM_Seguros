@@ -4,36 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <title>Detalle del Cliente</title>
+    <title>Detalles del Cliente</title>
 </head>
 <body>
     <div class="container mt-5">
-        <h2>Detalle del Cliente</h2>
-        <table class="table table-bordered">
-            <tbody id="detalle-cliente">
-                <!-- Detalles del cliente aquí -->
-            </tbody>
-        </table>
-        <a href="index.html" class="btn btn-primary">Volver</a>
+        <h1>Detalles del Cliente</h1>
+        <div id="detalles-cliente">
+            <!-- Detalles del cliente se mostrarán aquí -->
+        </div>
+        <a href="index.html" class="btn btn-primary mt-3">Volver</a>
     </div>
 
     <script>
-        // Obtener el índice del cliente desde la URL
-        const params = new URLSearchParams(window.location.search);
-        const clienteIndex = params.get('cliente');
-        
-        // Obtener los datos del cliente desde localStorage
-        const clientes = JSON.parse(localStorage.getItem('clientes'));
-        const cliente = clientes[clienteIndex];
-
-        // Mostrar los datos en la tabla de detalles
-        const detalleCliente = document.getElementById('detalle-cliente');
-        detalleCliente.innerHTML = `
-            <tr><th>Tipo de Póliza</th><td>${cliente.tipoPoliza}</td></tr>
-            <tr><th>Precio</th><td>${cliente.precio}</td></tr>
-            <tr><th>Edad del Cliente</th><td>${cliente.edad}</td></tr>
-            <tr><th>Probabilidad de Retención</th><td>${cliente.probabilidad}</td></tr>
-        `;
+        // Recuperar datos del cliente desde localStorage
+        const cliente = JSON.parse(localStorage.getItem('clienteSeleccionado'));
+        if (cliente) {
+            document.getElementById('detalles-cliente').innerHTML = `
+                <p><strong>Tipo de Póliza:</strong> ${cliente.tipoPoliza}</p>
+                <p><strong>Precio:</strong> ${cliente.precio}</p>
+                <p><strong>Edad:</strong> ${cliente.edad}</p>
+                <p><strong>Probabilidad de Retención:</strong> ${cliente.probabilidad}</p>
+            `;
+        } else {
+            document.getElementById('detalles-cliente').innerHTML = '<p>No hay detalles disponibles.</p>';
+        }
     </script>
 </body>
 </html>
