@@ -26,15 +26,23 @@
         table th {
             cursor: pointer; /* Cambia el cursor en las cabeceras */
         }
+        table th:hover {
+            background-color: inherit; /* Evita que el encabezado cambie de color al pasar el mouse */
+        }
         table tr:hover {
             background-color: #d1ecf1; /* Cambiar el fondo al pasar el mouse (color claro) */
         }
         table tr {
             cursor: pointer; /* Cambia el cursor en las filas de la tabla */
         }
-        /* Asegurarse de que no haya conflicto de estilo */
         .table tr {
             cursor: pointer !important; /* Añadir !important para asegurarse de que se aplique */
+        }
+        .sorted-asc::after {
+            content: ' ▲'; /* Flecha hacia arriba */
+        }
+        .sorted-desc::after {
+            content: ' ▼'; /* Flecha hacia abajo */
         }
     </style>
 </head>
@@ -47,10 +55,10 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th onclick="ordenar('tipoPoliza')">Tipo de Póliza</th>
-                    <th onclick="ordenar('precio')">Precio</th>
-                    <th onclick="ordenar('edad')">Edad del Cliente</th>
-                    <th onclick="ordenar('probabilidad')">Probabilidad de Retención</th>
+                    <th id="tipoPolizaHeader" onclick="ordenar('tipoPoliza')">Tipo de Póliza</th>
+                    <th id="precioHeader" onclick="ordenar('precio')">Precio</th>
+                    <th id="edadHeader" onclick="ordenar('edad')">Edad del Cliente</th>
+                    <th id="probabilidadHeader" onclick="ordenar('probabilidad')">Probabilidad de Retención</th>
                 </tr>
             </thead>
             <tbody id="tabla-clientes">
