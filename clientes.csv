@@ -1,0 +1,7 @@
+tipoPoliza,precio,edad,probabilidad
+Vida,100,30,0.9
+Salud,200,45,0.85
+Automóvil,150,50,0.7
+Hogar,120,35,0.75
+Vida,90,25,0.95
+Salud,180,60,0.8
