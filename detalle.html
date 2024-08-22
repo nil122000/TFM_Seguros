@@ -3,49 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle del Cliente</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Detalles del Cliente</title>
 </head>
 <body>
-    <header class="bg-primary text-white text-center p-4">
-        <h1>Detalle del Cliente</h1>
-    </header>
-    
     <div class="container mt-5">
-        <div id="detalle-cliente" class="card">
-            <div class="card-body">
-                <h5 class="card-title" id="tipoPoliza"></h5>
-                <p class="card-text" id="detalles"></p>
-            </div>
+        <h1>Detalles del Cliente</h1>
+        <div id="detalles-cliente">
+            <!-- Detalles del cliente se mostrarán aquí -->
         </div>
+        <a href="index.html" class="btn btn-primary mt-3">Volver</a>
     </div>
 
-    <footer>
-        <p>&copy; 2024 Tu Empresa. Todos los derechos reservados.</p>
-    </footer>
-
     <script>
-        // Obtener parámetros de la URL
-        const params = new URLSearchParams(window.location.search);
-        const id = params.get('id');
-
-        // Datos de ejemplo (deberías usar los mismos datos que en index.html)
-        const clientes = [
-            { tipoPoliza: 'Vida', precio: 100, edad: 30, probabilidad: 0.9 },
-            { tipoPoliza: 'Salud', precio: 200, edad: 45, probabilidad: 0.85 },
-            { tipoPoliza: 'Automóvil', precio: 150, edad: 50, probabilidad: 0.7 },
-            { tipoPoliza: 'Hogar', precio: 120, edad: 35, probabilidad: 0.75 },
-            { tipoPoliza: 'Vida', precio: 90, edad: 25, probabilidad: 0.95 },
-            { tipoPoliza: 'Salud', precio: 180, edad: 60, probabilidad: 0.8 },
-        ];
-
-        // Mostrar detalles del cliente
-        const cliente = clientes[id]; // Obtener el cliente usando el ID
+        // Recuperar datos del cliente desde localStorage
+        const cliente = JSON.parse(localStorage.getItem('clienteSeleccionado'));
         if (cliente) {
-            document.getElementById('tipoPoliza').innerText = `Tipo de Póliza: ${cliente.tipoPoliza}`;
-            document.getElementById('detalles').innerText = `Precio: $${cliente.precio}, Edad: ${cliente.edad}, Probabilidad de Retención: ${cliente.probabilidad}`;
+            document.getElementById('detalles-cliente').innerHTML = `
+                <p><strong>Tipo de Póliza:</strong> ${cliente.tipoPoliza}</p>
+                <p><strong>Precio:</strong> ${cliente.precio}</p>
+                <p><strong>Edad:</strong> ${cliente.edad}</p>
+                <p><strong>Probabilidad de Retención:</strong> ${cliente.probabilidad}</p>
+            `;
         } else {
-            document.getElementById('detalle-cliente').innerText = 'Cliente no encontrado';
+            document.getElementById('detalles-cliente').innerHTML = '<p>No hay detalles disponibles.</p>';
         }
     </script>
 </body>
