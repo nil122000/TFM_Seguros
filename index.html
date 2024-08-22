@@ -7,15 +7,18 @@
     <title>Tabla Interactiva</title>
 </head>
 <body>
-    <div class="container mt-5">
+    <header class="bg-primary text-white text-center p-4">
         <h1>Clientes y Políticas</h1>
-        <table class="table">
+    </header>
+    
+    <div class="container mt-5">
+        <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Tipo de Póliza</th>
-                    <th>Precio</th>
-                    <th>Edad del Cliente</th>
-                    <th>Probabilidad de Retención</th>
+                    <th onclick="ordenar('tipoPoliza')">Tipo de Póliza</th>
+                    <th onclick="ordenar('precio')">Precio</th>
+                    <th onclick="ordenar('edad')">Edad del Cliente</th>
+                    <th onclick="ordenar('probabilidad')">Probabilidad de Retención</th>
                 </tr>
             </thead>
             <tbody id="tabla-clientes">
@@ -24,6 +27,11 @@
         </table>
     </div>
 
+    <footer class="bg-light text-center p-4">
+        <p>&copy; 2024 Tu Empresa. Todos los derechos reservados.</p>
+    </footer>
+
     <script src="script.js"></script>
 </body>
 </html>
+
