@@ -2,61 +2,59 @@
 async function cargarDatosCSV(url) {
     const response = await fetch(url);
     const data = await response.text();
-    const rows = data.split('\n').map(row => row.split(',').map(column => column.trim())); // Separar filas y columnas
+    const rows = data.split('\n').map(row => row.split(',').map(column => column.trim())); // Separar por comas
 
-    const encabezados = rows[0]; // Obtener la primera fila como encabezados
+    const encabezados = rows[0]; // Primer fila como encabezados
     const clientes = rows.slice(1).map((row, index) => {
-        // Verificar que la fila no esté vacía
+        // Crear objeto cliente para cada fila
         if (row.length === encabezados.length && row.every(col => col)) {
-            let cliente = { id: index }; // Asignar un ID único
-            encabezados.forEach((encabezado, i) => {
-                // Asignar cada columna al objeto cliente
-                cliente[encabezado] = isNaN(row[i]) ? row[i] : parseFloat(row[i]); // Convertir a número si es posible
+            const cliente = {};
+            encabezados.forEach((header, i) => {
+                cliente[header] = isNaN(row[i]) ? row[i] : parseFloat(row[i]); // Convertir a número si es necesario
             });
+            cliente.id = index; // Asignar ID único
             return cliente;
         }
         return null; // Retornar null para filas inválidas
-    }).filter(cliente => cliente !== null); // Filtrar las filas inválidas
+    }).filter(cliente => cliente !== null); // Filtrar filas inválidas
 
-    return { clientes, encabezados }; // Retornar tanto los clientes como los encabezados
+    return { encabezados, clientes }; // Retornar encabezados y clientes
 }
 
 // Variable para almacenar el estado de ordenación
-let ordenAscendente = false; // Cambiado a false porque inicialmente es descendente
-let clientes = [];
-let encabezados = [];
+let ordenAscendente = false;
+let clientes = []; // Variable global para almacenar los clientes
 
 // Función para cargar la tabla
-function cargarTabla(data, encabezados) {
+function cargarTabla(data) {
     const tablaClientes = document.getElementById('tabla-clientes');
     tablaClientes.innerHTML = ''; // Limpiar tabla
-
-    // Crear encabezados de la tabla dinámicamente
-    const thead = document.getElementById('tabla-encabezados');
-    thead.innerHTML = ''; // Limpiar encabezados
-
-    encabezados.forEach(encabezado => {
-        const th = document.createElement('th');
-        th.innerText = encabezado;
-        th.onclick = () => ordenar(encabezado); // Asignar función de ordenación
-        thead.appendChild(th);
-    });
-
-    // Crear filas de la tabla dinámicamente
     data.forEach(cliente => {
         const fila = document.createElement('tr');
-        encabezados.forEach(encabezado => {
-            const td = document.createElement('td');
-            td.innerText = cliente[encabezado];
-            fila.appendChild(td);
-        });
+        for (const key in cliente) {
+            if (key !== 'id') { // No mostrar ID en la tabla
+                const celda = document.createElement('td');
+                celda.textContent = cliente[key];
+                fila.appendChild(celda);
+            }
+        }
         fila.addEventListener('click', () => {
-            // Almacenar el cliente en localStorage antes de redirigir
             localStorage.setItem('clienteSeleccionado', JSON.stringify(cliente));
-            window.location.href = `detalle.html?id=${cliente.id}`; // Redirecciona a detalle.html con ID
+            window.location.href = `detalle.html?id=${cliente.id}`; 
         });
-
         tablaClientes.appendChild(fila);
+    });
+}
+
+// Función para crear el encabezado de la tabla
+function crearEncabezado(encabezados) {
+    const tablaEncabezado = document.getElementById('tabla-encabezado');
+    tablaEncabezado.innerHTML = ''; // Limpiar encabezado
+    encabezados.forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        th.onclick = () => ordenar(header); // Agregar evento de ordenación
+        tablaEncabezado.appendChild(th);
     });
 }
 
@@ -72,23 +70,22 @@ function ordenar(propiedad) {
     });
 
     // Marcar el encabezado correspondiente
-    const thead = document.getElementById('tabla-encabezados');
-    thead.querySelectorAll('th').forEach(th => {
-        th.classList.remove('sorted-asc', 'sorted-desc'); // Limpiar las clases de ordenación
+    document.querySelectorAll('th').forEach(th => {
+        th.classList.remove('sorted-asc', 'sorted-desc');
     });
-    const header = Array.from(thead.children).find(th => th.innerText === propiedad);
+    const header = [...document.getElementById('tabla-encabezado').children].find(th => th.textContent === propiedad);
     header.classList.add(ordenAscendente ? 'sorted-asc' : 'sorted-desc');
 
-    cargarTabla(clientes, encabezados); // Recargar la tabla
+    cargarTabla(clientes); // Recargar la tabla
 }
 
 // Función para filtrar
 function filtrar() {
     const input = document.getElementById('filterInput').value.toLowerCase();
     const filtrados = clientes.filter(cliente => 
-        cliente.tipoPoliza.toLowerCase().includes(input)
+        Object.values(cliente).some(value => value.toString().toLowerCase().includes(input)) // Filtrar por todos los campos
     );
-    cargarTabla(filtrados, encabezados); // Cargar tabla con datos filtrados
+    cargarTabla(filtrados); // Cargar tabla con datos filtrados
 }
 
 // Agregar el evento de entrada para filtrar
@@ -96,8 +93,8 @@ document.getElementById('filterInput').addEventListener('input', filtrar);
 
 // Cargar la tabla al cargar la página
 window.onload = async () => {
-    const result = await cargarDatosCSV('clientes.csv'); // Ruta al archivo CSV
-    clientes = result.clientes;
-    encabezados = result.encabezados;
-    cargarTabla(clientes, encabezados); // Cargar la tabla
+    const { encabezados, clientes: data } = await cargarDatosCSV('clientes.csv'); // Ruta al archivo CSV
+    clientes = data; // Guardar los clientes globalmente
+    crearEncabezado(encabezados); // Crear encabezado
+    cargarTabla(clientes); // Cargar la tabla
 };
