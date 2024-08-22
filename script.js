@@ -1,46 +1,55 @@
-// Variable global para almacenar clientes
-let clientes = [];
-
 // Función para cargar datos desde un archivo CSV
 async function cargarDatosCSV(url) {
     const response = await fetch(url);
     const data = await response.text();
-    const rows = data.split('\n').slice(1); // Ignorar la primera fila (encabezados)
+    const rows = data.split('\n').map(row => row.split(',').map(column => column.trim())); // Separar filas y columnas
 
-    const clientesData = rows.map((row, index) => {
-        const columns = row.split(',').map(column => column.trim()); // Eliminar espacios en blanco
-
-        // Verificar que la fila no esté vacía y tenga el número adecuado de columnas
-        if (columns.length === 4 && columns.every(col => col)) {
-            return {
-                id: index,  // Asignar un ID único aquí
-                tipoPoliza: columns[0],
-                precio: parseFloat(columns[1]),
-                edad: parseInt(columns[2]),
-                probabilidad: parseFloat(columns[3]),
-            };
+    const encabezados = rows[0]; // Obtener la primera fila como encabezados
+    const clientes = rows.slice(1).map((row, index) => {
+        // Verificar que la fila no esté vacía
+        if (row.length === encabezados.length && row.every(col => col)) {
+            let cliente = { id: index }; // Asignar un ID único
+            encabezados.forEach((encabezado, i) => {
+                // Asignar cada columna al objeto cliente
+                cliente[encabezado] = isNaN(row[i]) ? row[i] : parseFloat(row[i]); // Convertir a número si es posible
+            });
+            return cliente;
         }
         return null; // Retornar null para filas inválidas
     }).filter(cliente => cliente !== null); // Filtrar las filas inválidas
 
-    return clientesData;
+    return { clientes, encabezados }; // Retornar tanto los clientes como los encabezados
 }
 
 // Variable para almacenar el estado de ordenación
 let ordenAscendente = false; // Cambiado a false porque inicialmente es descendente
+let clientes = [];
+let encabezados = [];
 
 // Función para cargar la tabla
-function cargarTabla(data) {
+function cargarTabla(data, encabezados) {
     const tablaClientes = document.getElementById('tabla-clientes');
     tablaClientes.innerHTML = ''; // Limpiar tabla
+
+    // Crear encabezados de la tabla dinámicamente
+    const thead = document.getElementById('tabla-encabezados');
+    thead.innerHTML = ''; // Limpiar encabezados
+
+    encabezados.forEach(encabezado => {
+        const th = document.createElement('th');
+        th.innerText = encabezado;
+        th.onclick = () => ordenar(encabezado); // Asignar función de ordenación
+        thead.appendChild(th);
+    });
+
+    // Crear filas de la tabla dinámicamente
     data.forEach(cliente => {
         const fila = document.createElement('tr');
-        fila.innerHTML = `
-            <td>${cliente.tipoPoliza}</td>
-            <td>${cliente.precio}</td>
-            <td>${cliente.edad}</td>
-            <td>${cliente.probabilidad}</td>
-        `;
+        encabezados.forEach(encabezado => {
+            const td = document.createElement('td');
+            td.innerText = cliente[encabezado];
+            fila.appendChild(td);
+        });
         fila.addEventListener('click', () => {
             // Almacenar el cliente en localStorage antes de redirigir
             localStorage.setItem('clienteSeleccionado', JSON.stringify(cliente));
@@ -62,14 +71,7 @@ function ordenar(propiedad) {
         return 0;
     });
 
-    // Marcar el encabezado correspondiente
-    document.querySelectorAll('th').forEach(th => {
-        th.classList.remove('sorted-asc', 'sorted-desc');
-    });
-    const header = document.getElementById(`${propiedad}Header`);
-    header.classList.add(ordenAscendente ? 'sorted-asc' : 'sorted-desc');
-
-    cargarTabla(clientes); // Recargar la tabla
+    cargarTabla(clientes, encabezados); // Recargar la tabla
 }
 
 // Función para filtrar
@@ -78,7 +80,7 @@ function filtrar() {
     const filtrados = clientes.filter(cliente => 
         cliente.tipoPoliza.toLowerCase().includes(input)
     );
-    cargarTabla(filtrados); // Cargar tabla con datos filtrados
+    cargarTabla(filtrados, encabezados); // Cargar tabla con datos filtrados
 }
 
 // Agregar el evento de entrada para filtrar
@@ -86,9 +88,8 @@ document.getElementById('filterInput').addEventListener('input', filtrar);
 
 // Cargar la tabla al cargar la página
 window.onload = async () => {
-    clientes = await cargarDatosCSV('clientes.csv'); // Ruta al archivo CSV
-    clientes.sort((a, b) => b.probabilidad - a.probabilidad); // Ordenar de mayor a menor
-    cargarTabla(clientes); // Cargar la tabla
-    // Establecer la clase de ordenación en la cabecera correspondiente
-    document.getElementById('probabilidadHeader').classList.add('sorted-desc');
+    const result = await cargarDatosCSV('clientes.csv'); // Ruta al archivo CSV
+    clientes = result.clientes;
+    encabezados = result.encabezados;
+    cargarTabla(clientes, encabezados); // Cargar la tabla
 };
