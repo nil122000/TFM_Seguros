@@ -22,11 +22,11 @@
         const params = new URLSearchParams(window.location.search);
         const clienteIndex = params.get('cliente');
         
-        // Obtener los datos del cliente
+        // Obtener los datos del cliente desde localStorage
         const clientes = JSON.parse(localStorage.getItem('clientes'));
         const cliente = clientes[clienteIndex];
 
-        // Mostrar los datos en la tabla
+        // Mostrar los datos en la tabla de detalles
         const detalleCliente = document.getElementById('detalle-cliente');
         detalleCliente.innerHTML = `
             <tr><th>Tipo de Póliza</th><td>${cliente.tipoPoliza}</td></tr>
@@ -37,4 +37,3 @@
     </script>
 </body>
 </html>
-
